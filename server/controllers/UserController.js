@@ -67,6 +67,19 @@ class UserController{
 
     }
 
+    // get user id
+    static getUser(req,res){
+
+        User.findOne({ _id : req.decoded.id})
+            .then(user =>{
+                res.status(201).json({ data : user});
+            })
+            .catch(error =>{
+                res.status(500).json({ msg : 'ERROR ',error})
+            })
+
+    }
+
 }
 
 module.exports = UserController

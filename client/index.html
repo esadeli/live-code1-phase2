@@ -131,6 +131,18 @@
           .catch( error =>{
               console.log('ERROR :',error)
           })
+          
+          axios({
+            method : 'GET',
+            url : 'http://localhost:3000/users/userInfo'
+          })
+          .then( result =>{
+              this.info = result.data
+              console.log('Hasil-->',result.data)
+          })
+          .catch( error =>{
+              console.log('ERROR :',error)
+          })
         }
       })
     </script>
