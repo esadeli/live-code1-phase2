@@ -9,4 +9,9 @@ router.post('/register',(req,res)=>{
     UserController.registerUser(req,res);
 })
 
+// login user 
+router.post('/login',(req,res)=>{
+    UserController.loginUser(req,res);
+})
+
 module.exports = router

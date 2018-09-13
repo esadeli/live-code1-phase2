@@ -17,6 +17,10 @@ const UserSchema = new Schema({
     password : {
         type : String,
         minlength : [6, 'Email should has at least 6 characters'],
+    },
+    listQuotes : {
+        type : Schema.Types.ObjectId,
+        ref : 'Quote'
     }
 
 },{

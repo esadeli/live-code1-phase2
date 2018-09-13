@@ -10,11 +10,13 @@
 	mongoose.connect('mongodb://localhost:27017/liveCode1',{ useNewUrlParser: true });
 
 	const UserRoutes = require('./routes/UserRoutes');
-	app.use(express.urlencoded({extended : false}));
+    const QuoteRoutes = require('./routes/QuoteRoutes');
+    app.use(express.urlencoded({extended : false}));
 	app.use(express.json());
 	
 	app.use(cors());
-	app.use('/users',UserRoutes)
+    app.use('/users',UserRoutes);
+    app.use('/quotes',QuoteRoutes);
 
 	app.get('/',(req,res)=>{
 	    res.send('OK Enter index')

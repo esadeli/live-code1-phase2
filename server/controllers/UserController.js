@@ -36,13 +36,28 @@ class UserController{
 
     static loginUser(req,res){
 
-        let hash = HashPassword(req,res)
+        let hash = HashPassword(req.body.password)
 
         User.findOne({ email : req.body.email, password : hash})
             .then(user=>{
-                res.status(201).json({
-                    "token" : token //--->
-                })
+                
+                if(user){
+                    jwt.sign({
+                        id : user._id,
+                        name : user.name,
+                        email : user.email
+                    },process.env.SECRET_TOKEN,(error,token)=>{
+                        if(error){
+                            res.status(403).json({ msg : 'Please login / register first'})
+                        }else{
+                            res.status(201).json({
+                                "token" : token
+                            })
+                        }
+                    })
+                }else if(user===null){
+                    res.status(403).json({ msg : 'User not found'})
+                }
             })
             .catch(error =>{
                 res.status(500).json({
