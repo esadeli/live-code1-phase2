@@ -38,7 +38,6 @@ class QuoteController {
     
         Quote.findOneAndRemove({ _id : req.params.id, user : req.decoded.id})
             .then(quote =>{
-                console.log('DELETE-->',quote)
 
                 if(quote){
                     res.status(201).json({ 
