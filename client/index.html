@@ -14,11 +14,19 @@
       <div class="navbar bg-dark">
         <div class="container">
           <a class="navbar-brand" href="#">Livecode1</a>
-          <div class="header-right">
-            <input type="text" placeholder="username">
-            <input type="password" placeholder="password">
-            <button>Login</button>
+          <div v-if="token === ''">
+              <div class="header-right">
+                  <input v-model="email" type="text" placeholder="username">
+                  <input v-model="password" type="password" placeholder="password">
+                  <button v-on:click="loginUser(email,password)">Login</button>
+                </div>
           </div>
+          <div v-else>
+              <div class="header-right">
+                  <button v-on:click="logoutUser()">Logout</button>
+                </div>
+          </div>
+          
         </div>
       </div>
 
@@ -35,14 +43,17 @@
           <div class="col-lg-9">
             <div class="row">
               <div class="col-lg-9 col-sm-9 portfolio-item">
-                <form>
-                  <div class="form-group">
-                    <textarea class="form-control" rows="3" placeholder="Quotes"></textarea>
-                  </div>
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </div>
-                </form>
+                <div v-if="token !== ''">
+                    <form>
+                        <div class="form-group">
+                          <textarea class="form-control" rows="3" placeholder="Quotes"></textarea>
+                        </div>
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                      </form>
+                </div>
+                
               </div>
             </div>
             <hr>
@@ -65,64 +76,6 @@
                     </div>
               </div>
 
-              <div class="col-lg-6 col-sm-6 portfolio-item">
-                <div class="card h-70">
-                  <div class="card-body">
-                    <h4 class="card-title">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                    </h4>
-                    <a href="#">Delete</a> | <a href="#">Translate</a>
-                    <p class="translate font-italic">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6 col-sm-6 portfolio-item">
-                <div class="card h-70">
-                  <div class="card-body">
-                    <h4 class="card-title">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                    </h4>
-                    <a href="#">Delete</a> | <a href="#">Translate</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6 col-sm-6 portfolio-item">
-                <div class="card h-70">
-                  <div class="card-body">
-                    <h4 class="card-title">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                    </h4>
-                    <a href="#">Delete</a> | <a href="#">Translate</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6 col-sm-6 portfolio-item">
-                <div class="card h-70">
-                  <div class="card-body">
-                    <h4 class="card-title">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                    </h4>
-                    <a href="#">Delete</a> | <a href="#">Translate</a>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6 col-sm-6 portfolio-item">
-                <div class="card h-70">
-                  <div class="card-body">
-                    <h4 class="card-title">
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
-                    </h4>
-                    <a href="#">Delete</a> | <a href="#">Translate</a>
-                  </div>
-                </div>
-              </div>
-
             </div>
           </div>
 
@@ -138,8 +91,33 @@
         data () {
           return {
             info: null,
-            baseURL : 'http://localhost:3000'
+            email : '',
+            password : '',
+            token : localStorage.getItem('token')
           }
+        },
+        methods : {
+            loginUser(email,password){
+                console.log('Data mentah', email,password)
+                axios({
+                    method : 'POST',
+                    url : 'http://localhost:3000/users/login',
+                    data : {
+                      email : email,
+                      password : password
+                    }
+                })
+                .then( user =>{
+                    // console.log('Ini token', user.data.token)
+                    localStorage.setItem('token',user.data.token)
+                })
+                .catch( error => {
+                    console.log('ERROR: ',error)
+                })
+            },
+            logoutUser(){
+                localStorage.setItem('token','')
+            }
         },
         created() {
           axios({
@@ -151,7 +129,7 @@
               console.log('Hasil-->',result.data)
           })
           .catch( error =>{
-              console.log('ERROR -->',error)
+              console.log('ERROR :',error)
           })
         }
       })
